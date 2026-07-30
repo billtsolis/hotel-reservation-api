@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: hotel-reservation
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hotel_reservation
+    username: hotel_user
+    password: hotel_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.example.hotelreservation: DEBUG
+
+  file:
+    name: logs/hotel-reservation.log
+
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+      total-size-cap: 100MB
+
+app:
+  security:
+    jwt-secret: ${JWT_SECRET:hotel-reservation-assessment-secret-key-2026}
+    jwt-expiration-seconds: ${JWT_EXPIRATION_SECONDS:3600}

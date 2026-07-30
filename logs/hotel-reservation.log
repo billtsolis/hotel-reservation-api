@@ -1,0 +1,10 @@
+2026-07-31T00:00:10.945+03:00  INFO 6576 --- [hotel-reservation] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-31T00:00:10.948+03:00  INFO 6576 --- [hotel-reservation] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-31T00:00:10.951+03:00  INFO 6576 --- [hotel-reservation] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-31T00:00:11.086+03:00  WARN 6576 --- [hotel-reservation] [http-nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.example.hotelreservation.exception.BusinessValidationException: Invalid sorting field: ["id"]]
+2026-07-31T00:00:12.589+03:00  WARN 6576 --- [hotel-reservation] [http-nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.example.hotelreservation.exception.BusinessValidationException: Invalid sorting field: ["id"]]
+2026-07-31T00:00:13.674+03:00  WARN 6576 --- [hotel-reservation] [http-nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.example.hotelreservation.exception.BusinessValidationException: Invalid sorting field: ["id"]]
+2026-07-31T00:00:17.912+03:00  WARN 6576 --- [hotel-reservation] [http-nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.example.hotelreservation.exception.BusinessValidationException: Invalid sorting field: ["id"]]
+2026-07-31T00:00:18.181+03:00  WARN 6576 --- [hotel-reservation] [http-nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.example.hotelreservation.exception.BusinessValidationException: Invalid sorting field: ["id"]]
+2026-07-31T00:00:18.937+03:00  WARN 6576 --- [hotel-reservation] [http-nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.example.hotelreservation.exception.BusinessValidationException: Invalid sorting field: ["id"]]
+2026-07-31T00:00:22.810+03:00  INFO 6576 --- [hotel-reservation] [http-nio-8080-exec-5] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 405 ms
