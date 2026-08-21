@@ -7,6 +7,7 @@ import com.example.hotelreservation.entity.Hotel;
 import com.example.hotelreservation.entity.Reservation;
 import com.example.hotelreservation.entity.ReservationStatus;
 import com.example.hotelreservation.exception.BusinessValidationException;
+import com.example.hotelreservation.exception.ReservationConflictException;
 import com.example.hotelreservation.exception.ResourceNotFoundException;
 import com.example.hotelreservation.mapper.ReservationMapper;
 import com.example.hotelreservation.repository.CustomerRepository;
@@ -211,10 +212,11 @@ class ReservationServiceTest {
                 request.checkOut()
         )).thenReturn(true);
 
-        BusinessValidationException exception = assertThrows(
-                BusinessValidationException.class,
-                () -> reservationService.createReservation(request)
-        );
+        ReservationConflictException exception =
+                assertThrows(
+                        ReservationConflictException.class,
+                        () -> reservationService.createReservation(request)
+                );
 
         assertEquals(
                 "Customer already has an active reservation "
