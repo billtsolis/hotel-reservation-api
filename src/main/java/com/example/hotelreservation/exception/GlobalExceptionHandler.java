@@ -25,6 +25,22 @@ public class GlobalExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    private boolean hasConstraint(Throwable throwable, String constraintName) {
+        Throwable current = throwable;
+
+        while (current != null) {
+            if (current instanceof org.hibernate.exception.ConstraintViolationException violation) {
+                if (constraintName.equals(
+                        violation.getConstraintName()
+                )) {
+                    return true;
+                }
+            }
+            current = current.getCause();
+        }
+        return false;
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleResourceNotFound(
             ResourceNotFoundException exception,
@@ -144,23 +160,42 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiErrorResponse> handleDataIntegrityViolation(
-            DataIntegrityViolationException exception,
+            DataIntegrityViolationException ex,
             HttpServletRequest request
     ) {
-        LOGGER.warn(
-                "Database constraint violation at {}",
-                request.getRequestURI(),
-                exception
-        );
 
-        return buildResponse(
-                HttpStatus.CONFLICT,
-                "The request violates a database constraint",
+        if (hasConstraint(
+                ex,
+                "ex_reservations_no_overlap_customer"
+        )) {
+
+            ApiErrorResponse response = new ApiErrorResponse(
+                    Instant.now(),
+                    HttpStatus.CONFLICT.value(),
+                    HttpStatus.CONFLICT.getReasonPhrase(),
+                    "Customer already has an overlapping active reservation",
+                    request.getRequestURI(),
+                    Map.of()
+            );
+
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(response);
+        }
+
+        ApiErrorResponse response = new ApiErrorResponse(
+                Instant.now(),
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                "Data conflict occurred",
                 request.getRequestURI(),
                 Map.of()
         );
-    }
 
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleUnexpectedException(
             Exception exception,
