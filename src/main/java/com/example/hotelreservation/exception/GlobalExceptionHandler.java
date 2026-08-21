@@ -166,7 +166,7 @@ public class GlobalExceptionHandler {
 
         if (hasConstraint(
                 ex,
-                "ex_reservations_no_overlap_customer"
+                "ex_rhasConstrainteservations_no_overlap_customer"
         )) {
 
             ApiErrorResponse response = new ApiErrorResponse(
@@ -259,6 +259,26 @@ public class GlobalExceptionHandler {
                 request.getRequestURI(),
                 Map.of()
         );
+    }
+
+    @ExceptionHandler(ReservationConflictException.class)
+    public ResponseEntity<ApiErrorResponse> handleReservationConflict(
+            ReservationConflictException exception,
+            HttpServletRequest request
+    ) {
+
+        ApiErrorResponse response = new ApiErrorResponse(
+                Instant.now(),
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                exception.getMessage(),
+                request.getRequestURI(),
+                Map.of()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
     }
 
 }

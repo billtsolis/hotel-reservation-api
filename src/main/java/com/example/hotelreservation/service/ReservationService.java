@@ -9,6 +9,7 @@ import com.example.hotelreservation.entity.Hotel;
 import com.example.hotelreservation.entity.Reservation;
 import com.example.hotelreservation.entity.ReservationStatus;
 import com.example.hotelreservation.exception.BusinessValidationException;
+import com.example.hotelreservation.exception.ReservationConflictException;
 import com.example.hotelreservation.exception.ResourceNotFoundException;
 import com.example.hotelreservation.mapper.ReservationMapper;
 import com.example.hotelreservation.repository.CustomerRepository;
@@ -97,7 +98,7 @@ public class ReservationService {
                     request.checkOut()
             );
 
-            throw new BusinessValidationException(
+            throw new ReservationConflictException(
                     "Customer already has an active reservation "
                             + "that overlaps with the selected dates"
             );

@@ -33,6 +33,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 @AutoConfigureMockMvc
 class HotelReservationIntegrationTest {
+// Spring ApplicationContext
+// PostgreSQL
+// Flyway
+// Security
+// JWT login
+// Controllers
+// Services
+// Repositories
+// DTO serialization/deserialization
+// Reservation creation
+// Logical cancellation
+// Dynamic search
 
     @Container
     @ServiceConnection
