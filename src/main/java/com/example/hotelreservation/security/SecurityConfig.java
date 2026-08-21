@@ -1,14 +1,12 @@
 package com.example.hotelreservation.security;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,8 +23,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @Configuration
+@EnableConfigurationProperties(SecurityProperties.class)
 public class SecurityConfig {
 
     @Bean
@@ -77,31 +77,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecretKey jwtSecretKey(
-            @Value("${app.security.jwt-secret}") String secret
+    public JwtEncoder jwtEncoder(
+            SecurityProperties securityProperties
     ) {
-        if (secret.getBytes(StandardCharsets.UTF_8).length < 32) {
-            throw new IllegalArgumentException(
-                    "JWT secret must contain at least 32 bytes"
-            );
-        }
 
-        return new SecretKeySpec(
-                secret.getBytes(StandardCharsets.UTF_8),
+        SecretKey secretKey = new SecretKeySpec(
+                securityProperties.jwtSecret()
+                        .getBytes(StandardCharsets.UTF_8),
                 "HmacSHA256"
         );
-    }
 
-    @Bean
-    public JwtEncoder jwtEncoder(SecretKey secretKey) {
-        return NimbusJwtEncoder
-                .withSecretKey(secretKey)
-                .algorithm(MacAlgorithm.HS256)
-                .build();
+        return new NimbusJwtEncoder(
+                new ImmutableSecret<>(secretKey)
+        );
     }
-
     @Bean
-    public JwtDecoder jwtDecoder(SecretKey secretKey) {
+    public JwtDecoder jwtDecoder(
+            SecurityProperties securityProperties
+    ) {
+
+        SecretKey secretKey = new SecretKeySpec(
+                securityProperties.jwtSecret()
+                        .getBytes(StandardCharsets.UTF_8),
+                "HmacSHA256"
+        );
+
         return NimbusJwtDecoder
                 .withSecretKey(secretKey)
                 .macAlgorithm(MacAlgorithm.HS256)

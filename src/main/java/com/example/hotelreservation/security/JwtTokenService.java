@@ -18,15 +18,14 @@ import java.util.List;
 public class JwtTokenService {
 
     private final JwtEncoder jwtEncoder;
-    private final long expirationSeconds;
+    private final SecurityProperties securityProperties;
 
     public JwtTokenService(
             JwtEncoder jwtEncoder,
-            @Value("${app.security.jwt-expiration-seconds}")
-            long expirationSeconds
+            SecurityProperties securityProperties
     ) {
         this.jwtEncoder = jwtEncoder;
-        this.expirationSeconds = expirationSeconds;
+        this.securityProperties = securityProperties;
     }
 
     public LoginResponse generateToken(
@@ -34,7 +33,7 @@ public class JwtTokenService {
     ) {
         Instant issuedAt = Instant.now();
         Instant expiresAt =
-                issuedAt.plusSeconds(expirationSeconds);
+                issuedAt.plusSeconds(securityProperties.jwtExpirationSeconds());
 
         List<String> roles = authentication
                 .getAuthorities()
@@ -62,7 +61,7 @@ public class JwtTokenService {
         return new LoginResponse(
                 token,
                 "Bearer",
-                expirationSeconds
+                securityProperties.jwtExpirationSeconds()
         );
     }
 }
